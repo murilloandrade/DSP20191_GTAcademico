@@ -18,7 +18,7 @@ public class Diciplina {
     @NotBlank
     private String nome;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "diciplina_eventos",
             joinColumns = @JoinColumn(name = "diciplina_id"),
             inverseJoinColumns = @JoinColumn(name = "evento_id"))

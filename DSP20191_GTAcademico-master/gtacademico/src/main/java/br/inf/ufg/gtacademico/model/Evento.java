@@ -21,15 +21,12 @@ public class Evento {
     private String descricao;
 
     @Column
-    @NotBlank
     private Calendar dataInicio;
 
     @Column
-    @NotBlank
     private Calendar dataFim;
 
     @Column
-    @NotBlank
     private boolean  realizado;
 
     public Evento() {

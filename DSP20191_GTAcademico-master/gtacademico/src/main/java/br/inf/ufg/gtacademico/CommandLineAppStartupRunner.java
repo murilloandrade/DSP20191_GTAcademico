@@ -10,7 +10,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -26,17 +28,20 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
 
     @Override
     public void run(String...args) throws Exception {
-        User admin = new User();
-        admin.setEmail("admin@gtacadmico.com");
-        admin.setName("Admin");
-        admin.setUsername("admin");
-        admin.setPassword( encoder.encode("123456"));
-        Set<Role> roles = new HashSet<>();
-        roles.add(roleRepository.findByName(RoleName.ROLE_ADMIN));
-        admin.setRoles(roles);
-
         if (userRepository.findAll().size() == 0) {
+
+            User admin = new User();
+            admin.setEmail("admin@gtacadmico.com");
+            admin.setName("Admin");
+            admin.setUsername("admin");
+            admin.setPassword( encoder.encode("123456"));
+            Set<Role> roles = new HashSet<>();
+            admin.setRoles(roles);
+
+            roleRepository.save(new Role(RoleName.ROLE_ADMIN));
+            roles.add(roleRepository.findByName(RoleName.ROLE_ADMIN));
             userRepository.save(admin);
+
         }
 
 
