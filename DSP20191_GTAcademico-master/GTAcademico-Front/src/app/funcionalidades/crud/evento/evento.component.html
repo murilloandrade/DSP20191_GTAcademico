@@ -1,0 +1,188 @@
+<div>
+    <h2>Diciplina</h2>
+    <div *ngIf="diciplina != null" class="modal-body">
+        <p><b>ID:</b> {{diciplina.id}}</p>
+        <p><b>Nome:</b> {{diciplina.nome}}</p>
+    </div>
+    <h4>Eventos</h4>
+    <button id="create" type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">Novo
+        Evento</button>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Data Inicío</th>
+                <th>Data Fim</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let evento of diciplina.eventos">
+                <td>{{evento?.id}}</td>
+                <td>{{evento?.nome}}</td>
+                <td>{{evento?.dataInicio | date:'dd/MM/yyyy'}}</td>
+                <td>{{evento?.dataFim | date:'dd/MM/yyyy'}}</td>
+                <td *ngIf='evento.realizado'>Realizado</td>
+                <td *ngIf='!evento.realizado'>Não Realizado</td>
+
+                <td style="width: 45%"><button class="btn btn-info" (click)="findOne(evento)" data-toggle="modal" data-target="#modalView">
+                        Ver
+                    </button>
+
+                    <button type="button" class="btn btn-primary" (click)="findOne(evento)" data-toggle="modal" data-target="#modalEdit">
+                        Editar
+                    </button>
+
+                    <button class="btn btn-danger" (click)="deleteEvento(evento)"> Deletar </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="voltar()" data-dismiss="modal">Voltar</button>
+    </div>
+</div>
+
+<!-- See Evento -->
+<div class="modal fade" id="modalView" tabindex="-1" role="dialog" aria-labelledby="modalViewTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalViewTitle">Evento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div *ngIf="findOneById != null" class="modal-body">
+                <p><b>ID:</b> {{findOneById.id}}</p>
+                <p><b>Nome:</b> {{findOneById.nome}}</p>
+                <p><b>Data Inicio:</b> {{findOneById.dataInicio | date:'dd/MM/yyyy'}}</p>
+                <p><b>Data Finalização:</b> {{findOneById.dataFim | date:'dd/MM/yyyy'}}</p>
+                <p *ngIf='findOneById.realizado'><b>Status:</b> Realizado</p>
+                <p *ngIf='!findOneById.realizado'><b>Status:</b> Não Realizado</p>
+                <p><b>Descrição:</b> {{findOneById.descricao}}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">voltar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Evento -->
+<div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="modalEditTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditTitle">Evento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="findOneById != null" class="modal-body">
+                    <p><b>ID:</b> {{findOneById.id}}</p>
+                </div>
+                <hr>
+                <h3 align="center">Editar</h3>
+                <div>
+                    <form>
+                        <div class="row">
+
+                            <div class="col-6">
+                                <label for="name">Nome:</label>
+                                <input type="text" [(ngModel)]="updateEvento.nome" placeholder="Nome" name="name" class="form-control" id="name" required>
+                            </div>
+
+                            <div class="col-6">
+                                <label for="descricao">Descrição:</label>
+                                <input type="text" [(ngModel)]="updateEvento.descricao" placeholder="Descrição" name="descricao" class="form-control" id="descricao" required="required">
+                            </div>
+
+                            <div class="col-6">
+                                <label for="dataInicio">Data Início:</label>
+                                <input type="date" [(ngModel)]="updateEvento.dataInicio" name="dataInicio" class="form-control" id="dataInicio" required>
+                            </div>
+
+                            <div class="col-6">
+                                <label for="dataFinal">Data Final:</label>
+                                <input type="date" [(ngModel)]="updateEvento.dataFim" name="dataFinal" class="form-control" id="dataFinal" required>
+                            </div>
+
+                            <div class="col-6">
+                                <label for="realizado">Status:</label>
+                                <select [(ngModel)]="updateEvento.realizado" name="realizado" class="form-control" id="realizado" required>
+                                    <option [value]="false">Não Realizado</option>
+                                    <option [value]="true">Realizado</option>
+                                </select>
+                            </div>
+
+                        </div>
+                        <br>
+                        <button class="btn btn-success" (click)="putEvento()">Editar</button>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Evento -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Criar Novo Evento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createEvento">
+                    <div class="row">
+
+                        <div class="col-6">
+                            <label for="name">Nome:</label>
+                            <input type="text" [(ngModel)]="evento.nome" placeholder="Nome" name="name" class="form-control" id="name" required>
+                        </div>
+
+                        <div class="col-6">
+                            <label for="descricao">Descrição:</label>
+                            <input type="text" [(ngModel)]="evento.descricao" placeholder="Descrição" name="descricao" class="form-control" id="descricao" required="required">
+                        </div>
+
+                        <div class="col-6">
+                            <label for="dataInicio">Data Início:</label>
+                            <input type="date" [(ngModel)]="evento.dataInicio" name="dataInicio" class="form-control" id="dataInicio" required>
+                        </div>
+
+                        <div class="col-6">
+                            <label for="dataFinal">Data Final:</label>
+                            <input type="date" [(ngModel)]="evento.dataFim" name="dataFinal" class="form-control" id="dataFinal" required>
+                        </div>
+
+                        <div class="col-6">
+                            <label for="realizado">Status:</label>
+                            <select [(ngModel)]="evento.realizado" name="realizado" class="form-control" id="realizado" required>
+                                <option [value]="false">Não Realizado</option>
+                                <option [value]="true">Realizado</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <br>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" (click)="createEvento()">Registrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
